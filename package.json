@@ -1,0 +1,17 @@
+{
+  "name": "service-workers",
+  "version": "1.0.0",
+  "description": "Service Workers Simple Example",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo \"Launching Simple HTTP Web Server with Live Reload\" && ./node_modules/lr-http-server/bin/lr-http-server",
+      "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jaziel Lopez <juan.jaziel@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-livereload": "^3.8.1",
+    "lr-http-server": "^0.1.5"
+  }
+}

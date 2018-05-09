@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Service Workers</title>
+
+    <style>
+
+        #container {
+            width: 50%;
+            margin: 0 auto;
+        }
+        .bordered-gauge {
+            border: 2px solid #e3e3e3;
+            border-radius: 12px;
+            width: 800px;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding-top:1px;
+            padding-bottom:1px;
+            margin:3px;
+
+
+        }
+
+        .end-division-gauge {
+            /*border-top: 1px solid #e3e3e3;*/
+            /*transform-origin: top left;*/
+            /*transform: translateX(100%) rotate(90deg);*/
+
+            height: 90px;
+            border-left: 2px solid red;
+            right: 133px;
+            top: -20px;
+            position: absolute;
+            z-index: 0;
+        }
+
+        .content-gauge {
+            transition-delay: 0.2s;
+            transition: all ease-out 1s;
+            padding-top:1px;
+            padding-bottom:1px;
+            overflow: hidden;
+            background-color: #e3e3e3;
+        }
+
+        #debug {
+            min-height: 400px;
+            margin: 0 auto;
+            background: #e3e3e3;
+            width: 50%;
+            font-family: "Andale Mono", "Droid Sans Mono", "PT Mono";
+            font-size: xx-small;
+        }
+
+        #debug h1 {
+            font-size:x-small;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<h2>Service Workers v1.0 Subscription Example</h2>
+
+<br/>
+
+<div id="container">
+<div id="bordered-gauge" class="bordered-gauge">
+    <div style="overflow: hidden">
+        <div id="content" class="content-gauge"></div>
+    </div>
+    <div id="end-division-gauge" class="end-division-gauge"></div>
+</div>
+</div>
+
+<br/>
+<hr/>
+<div id="debug">
+    <h1>Live output</h1>
+
+</div>
+
+<script type="application/javascript">
+
+    var Gauge = function(){
+
+        return {
+
+            config: {
+
+                step: null,
+
+                colors: [
+
+                    {color: 'lightblue', threshold: {min: 0, max: 30}},
+
+                    {color: 'lightsteelblue', threshold: {min: 30, max: 50}},
+
+                    {color: 'lightyellow', threshold: {min: 50, max: 70}},
+
+                    {color: 'lightsalmon', threshold: {min: 70, max: 90}},
+
+                    {color: 'lightpink', threshold: {min: 90, max: 100}},
+
+                    {color: 'lightpink', threshold: {min: 100, max: 120}},
+
+                ]
+            },
+
+            capGauge: function(){
+
+
+
+            },
+
+            getColor: function(step){
+
+                return this.config.colors.filter(function(i){
+
+                    return step >= i.threshold.min &&  step < i.threshold.max;
+
+                }).reduce(function(previous, current){
+
+                    return current;
+                }, {})
+            }
+        }
+    };
+
+
+    (function(){
+
+        var
+
+            gauge = new Gauge(),
+
+            i = 0,
+
+            debug = document.querySelector('#debug'),
+
+            el = document.createElement('div'),
+
+            content = document.querySelector('#content'),
+
+            segmentStep = 800 / 120,
+
+            endCap = document.querySelector('#end-cap-gauge');
+
+            el.innerText = 'Segmented step: ' + segmentStep;
+
+            debug.appendChild(el);
+
+            console.log(segmentStep);
+
+
+        setInterval(function(){
+
+            i += 10;
+
+            i = (i > 120) ? 0 : i;
+
+            gauge.config.step = i;
+
+            console.log(gauge.getColor(i));
+
+            content.style.width = (segmentStep * i ).toString() + 'px';
+
+            content.style.background = gauge.getColor(i).color;
+
+            el = document.createElement('div');
+
+            el.innerText = 'current reading:\t' + i.toString() + '\tcolor scale:\t' + gauge.getColor(i).color;
+
+            debug.appendChild(el);
+
+        }, 1999);
+
+    })();
+</script>
+</body>
+</html>
